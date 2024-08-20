@@ -32,29 +32,49 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
-    public List<Product> getProducts(ProductQueryParams productRequest) {
+    public Integer countProduct(ProductQueryParams productQueryParams) {
+        String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
+
+        Map<String, Object> map = new HashMap<>();
+
+        //查詢條件
+        if (productQueryParams.getCategory() != null) {
+            sql += " AND category = :category";//AND前面+空白鍵才不會跟SQL的1=1連在一起
+            map.put("category", productQueryParams.getCategory().name());
+        }
+
+        if (productQueryParams.getSearch() != null) {
+            sql += " AND product_name LIKE :search";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");
+        }
+
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map,Integer.class);//第三個參數將返回值轉成Integer類型
+        return total;
+    }
+    @Override
+    public List<Product> getProducts(ProductQueryParams productQueryParamsRequest) {
         String sql = "SELECT product_id,product_name, category, image_url, price, stock, description, " +
                 "created_date, last_modified_date FROM product WHERE 1=1";
         Map<String, Object> map = new HashMap<>();
 
         //查詢條件
-        if(productRequest.getCategory() != null){
+        if(productQueryParamsRequest.getCategory() != null){
             sql += " AND category = :category";//AND前面+空白鍵才不會跟SQL的1=1連在一起
-            map.put("category", productRequest.getCategory().name());
+            map.put("category", productQueryParamsRequest.getCategory().name());
         }
 
-        if(productRequest.getSearch() != null){
+        if(productQueryParamsRequest.getSearch() != null){
             sql += " AND product_name LIKE :search";
-            map.put("search","%"+productRequest.getSearch()+"%");
+            map.put("search","%"+productQueryParamsRequest.getSearch()+"%");
         }
 
         //排序
-        sql+=" ORDER BY "+productRequest.getOrderBy() + " "+productRequest.getSort();
+        sql+=" ORDER BY "+productQueryParamsRequest.getOrderBy() + " "+productQueryParamsRequest.getSort();
 
         //分頁
         sql+=" LIMIT :limit OFFSET :offset";;
-        map.put("limit",productRequest.getLimit());
-        map.put("offset",productRequest.getOffset());
+        map.put("limit",productQueryParamsRequest.getLimit());
+        map.put("offset",productQueryParamsRequest.getOffset());
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map,new ProductRowMapper());
 

@@ -1,5 +1,6 @@
 package com.po.springbootmall.service.impl;
 
+import com.po.springbootmall.controller.ProductController;
 import com.po.springbootmall.dao.ProductDao;
 import com.po.springbootmall.dto.ProductQueryParams;
 import com.po.springbootmall.dto.ProductRequest;
@@ -15,6 +16,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public Integer countProduct(ProductQueryParams productQueryParams) {
+        return productDao.countProduct(productQueryParams);
+    }
 
     @Override
     public List<Product> getProducts(ProductQueryParams productQueryParams) {
