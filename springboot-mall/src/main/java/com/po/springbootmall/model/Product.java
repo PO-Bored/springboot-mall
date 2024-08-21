@@ -12,7 +12,7 @@ public class Product {
     private Integer price;
     private Integer stock;
     private String description;
-    private Timestamp createTime;
+    private Timestamp createdTime;
     private Timestamp lastModifyDate;
 
     public Integer getProductId() {
@@ -72,11 +72,11 @@ public class Product {
     }
 
     public Timestamp getCreateTime() {
-        return createTime;
+        return createdTime;
     }
 
     public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
+        this.createdTime = createTime;
     }
 
     public Timestamp getLastModifyDate() {
