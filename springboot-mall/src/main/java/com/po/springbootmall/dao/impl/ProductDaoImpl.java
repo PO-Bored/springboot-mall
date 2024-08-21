@@ -38,43 +38,27 @@ public class ProductDaoImpl implements ProductDao {
         Map<String, Object> map = new HashMap<>();
 
         //查詢條件
-        if (productQueryParams.getCategory() != null) {
-            sql += " AND category = :category";//AND前面+空白鍵才不會跟SQL的1=1連在一起
-            map.put("category", productQueryParams.getCategory().name());
-        }
-
-        if (productQueryParams.getSearch() != null) {
-            sql += " AND product_name LIKE :search";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");
-        }
+        sql = addFilterSql(sql,map,productQueryParams);
 
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map,Integer.class);//第三個參數將返回值轉成Integer類型
         return total;
     }
     @Override
-    public List<Product> getProducts(ProductQueryParams productQueryParamsRequest) {
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
         String sql = "SELECT product_id,product_name, category, image_url, price, stock, description, " +
                 "created_date, last_modified_date FROM product WHERE 1=1";
         Map<String, Object> map = new HashMap<>();
 
         //查詢條件
-        if(productQueryParamsRequest.getCategory() != null){
-            sql += " AND category = :category";//AND前面+空白鍵才不會跟SQL的1=1連在一起
-            map.put("category", productQueryParamsRequest.getCategory().name());
-        }
-
-        if(productQueryParamsRequest.getSearch() != null){
-            sql += " AND product_name LIKE :search";
-            map.put("search","%"+productQueryParamsRequest.getSearch()+"%");
-        }
+        sql = addFilterSql(sql,map,productQueryParams);
 
         //排序
-        sql+=" ORDER BY "+productQueryParamsRequest.getOrderBy() + " "+productQueryParamsRequest.getSort();
+        sql+=" ORDER BY "+productQueryParams.getOrderBy() + " "+productQueryParams.getSort();
 
         //分頁
         sql+=" LIMIT :limit OFFSET :offset";;
-        map.put("limit",productQueryParamsRequest.getLimit());
-        map.put("offset",productQueryParamsRequest.getOffset());
+        map.put("limit",productQueryParams.getLimit());
+        map.put("offset",productQueryParams.getOffset());
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map,new ProductRowMapper());
 
@@ -158,5 +142,19 @@ public class ProductDaoImpl implements ProductDao {
         map.put("productId", productId);
 
         namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    private String addFilterSql(String sql,Map<String,Object> map,ProductQueryParams productQueryParams){
+        if (productQueryParams.getCategory() != null) {
+            sql += " AND category = :category";//AND前面+空白鍵才不會跟SQL的1=1連在一起
+            map.put("category", productQueryParams.getCategory().name());
+        }
+
+        if (productQueryParams.getSearch() != null) {
+            sql += " AND product_name LIKE :search";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");
+        }
+
+        return sql;
     }
 }
