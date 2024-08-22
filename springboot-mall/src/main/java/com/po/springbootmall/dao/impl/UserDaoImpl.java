@@ -25,11 +25,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getUserById(Integer userId) {
 
-        String sql = "SELECT user_id, email, password, create_time FROM user " +
-                "WHERE user_id = :userid";
+        String sql = "SELECT user_id, email, password, created_Date, last_modified_date " +
+                "FROM user WHERE user_id = :userId";
 
         Map<String ,Object> map = new HashMap<>();
-        map.put("userid", userId);
+        map.put("userId", userId);
 
         List<User> userLsit=namedParameterJdbcTemplate.query(sql, map,new UserRowMapper());
 
@@ -43,19 +43,19 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Integer createUser(UserRegisterRequest userRegisterRequest) {
 
-        String sql = "INSERT INTO user(email, password, create_time, last_modified_date) " +
-                "VALUES(:email, :password, :createTime, last_modified_date)";
+        String sql = "INSERT INTO user(email, password, created_date, last_modified_date) " +
+                "VALUES(:email, :password, :createdDate, :lastModifiedDate)";
 
         Map<String,Object> map = new HashMap<>();
         map.put("email", userRegisterRequest.getEmail());
         map.put("password", userRegisterRequest.getPassword());
 
         Date now = new Date();
-        map.put("createTime", now);
+        map.put("createdDate", now);
         map.put("lastModifiedDate", now);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql,new MapSqlParameterSource(),keyHolder);
+        namedParameterJdbcTemplate.update(sql,new MapSqlParameterSource(map),keyHolder);
 
         int userId = keyHolder.getKey().intValue();
         return userId;

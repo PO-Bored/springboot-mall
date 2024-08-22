@@ -6,7 +6,7 @@ public class User {
     private Integer userId;
     private String email;
     private String password;
-    private Date createDate;
+    private Date createdDate;
     private Date lastModifiedDate;
 
     public Integer getUserId() {
@@ -34,11 +34,11 @@ public class User {
     }
 
     public Date getCreateDate() {
-        return createDate;
+        return createdDate;
     }
 
     public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+        this.createdDate = createDate;
     }
 
     public Date getLastModifiedDate() {
