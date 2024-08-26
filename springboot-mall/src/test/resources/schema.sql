@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS product
     );
 
 
-CREATE TABLE IF NOT EXISTS user
+CREATE TABLE IF NOT EXISTS users
 (
     user_id            INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
     email              VARCHAR(256) NOT NULL UNIQUE,

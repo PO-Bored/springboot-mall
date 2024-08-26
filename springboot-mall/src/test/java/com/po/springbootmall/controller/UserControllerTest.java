@@ -49,8 +49,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(201))
                 .andExpect(jsonPath("$.userId", notNullValue()))
-                .andExpect(jsonPath("$.email", equalTo("test1@gmail.com")))
-                .andExpect(jsonPath("$.createdDate", notNullValue()))
+                .andExpect(jsonPath("$.e_mail", equalTo("test1@gmail.com")))
+                .andExpect(jsonPath("$.createDate", notNullValue()))
                 .andExpect(jsonPath("$.lastModifiedDate", notNullValue()));
 
         // 檢查資料庫中的密碼不為明碼
@@ -122,8 +122,8 @@ public class UserControllerTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.userId", notNullValue()))
-                .andExpect(jsonPath("$.email", equalTo(userRegisterRequest.getEmail())))
-                .andExpect(jsonPath("$.createdDate", notNullValue()))
+                .andExpect(jsonPath("$.e_mail", equalTo(userRegisterRequest.getEmail())))
+                .andExpect(jsonPath("$.createDate", notNullValue()))
                 .andExpect(jsonPath("$.lastModifiedDate", notNullValue()));
     }
 
